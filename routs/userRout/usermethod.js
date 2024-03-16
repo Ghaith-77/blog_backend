@@ -1,6 +1,6 @@
 const { userModel, validationPut } = require("../../mudels/userModel"); // تصحيح في اسم المجلد models
 const expressAsyncHandler = require("express-async-handler");
-const {verfiyTokenandAdmin,verfiyTokenandHimSelf} = require("../../medelweres/tokenmedelweres");
+const {verfiyTokenandAdmin,verfiyTokenandHimSelf, verfiyToken} = require("../../medelweres/tokenmedelweres");
 const validateObjectId = require("../../medelweres/validateObjectId");
 const router = require("express").Router(); // تصحيح في استدعاء الدالة Router()
 const bcrypt = require("bcryptjs"); // تصحيح في استدعاء مكتبة bcrypt
@@ -38,5 +38,12 @@ router.put("/updateUser/:id", validateObjectId,verfiyTokenandHimSelf, expressAsy
     
     res.status(200).json(newuser)
 }))
+
+router.post("/uploudImg",verfiyToken,(req,res)=>{
+    if(!req.file){
+        return res.status(400).json({message : "not file provied"})
+    }
+    return res.status(200).json({message : "img uplouded"})
+})
 
 module.exports = router; // تصحيح في تصدير الراوتر

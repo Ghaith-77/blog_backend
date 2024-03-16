@@ -39,4 +39,4 @@ async function verfiyTokenandAdmin(req, res, next) {
     })
 
 }
-module.exports = {verfiyTokenandAdmin,verfiyTokenandHimSelf}
+module.exports = {verfiyTokenandAdmin,verfiyTokenandHimSelf,verfiyToken}
