@@ -8,6 +8,7 @@ const storge = require("../../medelweres/uploudImg");
 let path = require("path");
 const { aploudtoCloud, DeletCloud } = require("../../medelweres/cloudenry");
 let fs = require("fs");
+const { log } = require("console");
 router.get("/getAllUsers", verfiyTokenandAdmin, expressAsyncHandler(async (req, res) => {
     let users = await userModel.find().select("-password")
     res.status(200).json(users)
@@ -45,23 +46,29 @@ router.post("/uploudImg", verfiyToken, storge.single("img"), async (req, res) =>
     if (!req.file) {
         return res.status(400).json({ message: "not file provied" })
     }
+    console.log("1");
 
-    let imgpath = path.join(__dirname, "images")
-
+    let imgpath = path.join(__dirname, "../../images")
+    console.log("2");
     let result = await aploudtoCloud(imgpath)
+    console.log("3");
 
-    let user = userModel.findById(req.body.id)
+    let user = await userModel.findById(req.user.id)
+    console.log("4");
 
-    if (user.profilePhoto.publicId != null) {
+
+    if (user.profilePhoto.publicId !== null) {
         await DeletCloud(user.profilePhoto.publicId)
     }
+    console.log("5");
     user.profilePhoto = {
         url: result.secure_url,
         publicId: result.publicId
     }
     user.save()
+    console.log("6");
 
-    return res.status(200).json({
+    res.status(200).json({
         message: "img uplouded",
         profilePhoto: {
             url: result.secure_url,
@@ -69,8 +76,11 @@ router.post("/uploudImg", verfiyToken, storge.single("img"), async (req, res) =>
         }
     }
     )
+    console.log("6");
 
     fs.unlinkSync(imgpath)
+    console.log("6");
+
 })
 
 module.exports = router; // تصحيح في تصدير الراوتر

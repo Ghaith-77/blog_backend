@@ -9,7 +9,7 @@ cloudinary.config({
 
 async function aploudtoCloud(img) {
     try {
-        let data = await cloudinary.Uploader.upload(img, {
+        let data = await cloudinary.uploader.upload(img, {
             resource_type: "auto"
         })
         return data
