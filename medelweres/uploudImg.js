@@ -1,28 +1,30 @@
-let multer = require("multer");
-let path = require("path");
+const multer = require("multer");
+const path = require("path");
 
-let storgedisk = multer.diskStorage({
-  distination: (req, file, cb) => {
-    cb(null, path.join(__dirname, "images"));
+const storageDisk = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, "../images"));
   },
   filename: (req, file, cb) => {
     if (file) {
-      cb(nul, new Date().toISOString().replace(/:/g, "-") + file.orignalname);
+      cb(null, new Date().toISOString().replace(/:/g, "-") + file.originalname); // تصحيح في تهجئة originalname
     } else {
       cb(null, false);
     }
   },
 });
-let storge = multer({
-  Storage: storgedisk,
-  limit: { fileSize: 1024 * 1024 * 2 },
+
+const storage = multer({
+  storage: storageDisk, // تصحيح في تهجئة storage
+  limits: { fileSize: 1024 * 1024 }, // تصحيح في تهجئة limits
   fileFilter: (req, file, cb) => {
     if (file.mimetype.startsWith("image")) {
-        cb(null,true)
-    }else{
-        cb({error:"type not correct"},false)
+      cb(null, true);
+    } else {
+      cb({ error: "Type not correct" }, false);
     }
   },
+  
 });
 
-module.exports = storge
+module.exports = storage;
