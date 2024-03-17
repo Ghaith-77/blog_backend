@@ -4,6 +4,7 @@ const {verfiyTokenandAdmin,verfiyTokenandHimSelf, verfiyToken} = require("../../
 const validateObjectId = require("../../medelweres/validateObjectId");
 const router = require("express").Router(); // تصحيح في استدعاء الدالة Router()
 const bcrypt = require("bcryptjs"); // تصحيح في استدعاء مكتبة bcrypt
+const storge = require("../../medelweres/uploudImg");
 
 
 router.get("/getAllUsers", verfiyTokenandAdmin, expressAsyncHandler(async (req, res) => {
@@ -39,7 +40,7 @@ router.put("/updateUser/:id", validateObjectId,verfiyTokenandHimSelf, expressAsy
     res.status(200).json(newuser)
 }))
 
-router.post("/uploudImg",verfiyToken,(req,res)=>{
+router.post("/uploudImg",verfiyToken,storge.single("img"),(req,res)=>{
     if(!req.file){
         return res.status(400).json({message : "not file provied"})
     }
