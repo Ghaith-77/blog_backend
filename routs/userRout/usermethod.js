@@ -60,6 +60,8 @@ router.post("/uploudImg", verfiyToken, storge.single("img"), async (req, res) =>
 
 
     if (user.profilePhoto.publicId !== null) {
+        console.log("zaghb");
+        console.log(user.profilePhoto.publicId);
         await DeletCloud(user.profilePhoto.publicId)
     }
     console.log("5");

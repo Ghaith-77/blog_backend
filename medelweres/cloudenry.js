@@ -19,7 +19,11 @@ async function aploudtoCloud(img) {
 }
 async function DeletCloud(imgId) {
     try {
-        let data = await cloudinary.Uploader.distroy(imgId)
+        console.log("id ");
+        console.log(imgId);
+        let data = await cloudinary.uploader.destroy(imgId)
+        console.log("data");
+        console.log(data);
         return data
     } catch (error) {
         return error
