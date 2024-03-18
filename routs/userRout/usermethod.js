@@ -48,10 +48,12 @@ router.post("/uploudImg", verfiyToken, storge.single("img"), async (req, res) =>
     }
     console.log("1");
 
-    let imgpath = path.join(__dirname, "../../images")
+    let imgpath = path.join(__dirname, `../../images/${req.file.filename}`)
     console.log("2");
     let result = await aploudtoCloud(imgpath)
     console.log("3");
+    console.log(result);
+
 
     let user = await userModel.findById(req.user.id)
     console.log("4");
@@ -63,7 +65,7 @@ router.post("/uploudImg", verfiyToken, storge.single("img"), async (req, res) =>
     console.log("5");
     user.profilePhoto = {
         url: result.secure_url,
-        publicId: result.publicId
+        publicId: result.public_id
     }
     user.save()
     console.log("6");
@@ -72,11 +74,10 @@ router.post("/uploudImg", verfiyToken, storge.single("img"), async (req, res) =>
         message: "img uplouded",
         profilePhoto: {
             url: result.secure_url,
-            publicId: result.publicId
+            publicId: result.public_id
         }
     }
     )
-    console.log("6");
 
     fs.unlinkSync(imgpath)
     console.log("6");
