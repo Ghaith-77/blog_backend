@@ -28,6 +28,17 @@ async function verfiyTokenandHimSelf(req, res, next) {
     })
 
 }
+async function verfiyTokenandHimSelfandAdmin(req, res, next) {
+    verfiyToken(req, res, () => {
+        if (req.user.id == req.params.id || req.user.isAdmin) {
+            next()
+        } else {
+            return res.status(401).json({ message: "you not the user or you not Admin" })
+        }
+
+    })
+
+}
 async function verfiyTokenandAdmin(req, res, next) {
     verfiyToken(req, res, () => {
         if (req.user.isAdmin) {
@@ -39,4 +50,4 @@ async function verfiyTokenandAdmin(req, res, next) {
     })
 
 }
-module.exports = {verfiyTokenandAdmin,verfiyTokenandHimSelf,verfiyToken}
+module.exports = {verfiyTokenandAdmin,verfiyTokenandHimSelf,verfiyToken,verfiyTokenandHimSelfandAdmin}
