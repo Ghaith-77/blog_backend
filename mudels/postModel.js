@@ -16,7 +16,7 @@ const PostSchema = mongoose.Schema(
       maxlength: 255,
     },
     description: {
-      type: String,
+      type: String, 
       required: true,
       minlength: 3,
       maxlength: 255,
