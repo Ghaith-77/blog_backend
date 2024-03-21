@@ -11,9 +11,11 @@ const { aploudtoCloud } = require("../medelweres/cloudenry");
 
 let fs = require("fs");
 const { verfiyToken } = require("../medelweres/tokenmedelweres");
-let storage = require("../medelweres/uploudImg")
+let storage = require("../medelweres/uploudImg");
 router.post(
-  "/createPost",verfiyToken,storage.single("img"),
+  "/createPost",
+  verfiyToken,
+  storage.single("img"),
   expressAsyncHandler(async (req, res) => {
     if (!req.file) {
       return res.status(400).json({ message: "not file provied" });
@@ -23,7 +25,6 @@ router.post(
     if (error) {
       return res.status(400).json({ message: error.details[0].message }); // استخدام return للخروج من الدالة
     }
-
 
     let pathimg = path.join(__dirname, `../images/${req.file.filename}`);
 
@@ -37,13 +38,29 @@ router.post(
       image: {
         url: result.secure_url,
         publicId: result.public_id,
-      }
+      },
     });
 
-    res.status(200).json(post)
+    res.status(200).json(post);
 
-    fs.unlinkSync(pathimg)
-    
+    fs.unlinkSync(pathimg);
+  })
+);
+
+router.get(
+  "getAllPosts",
+  expressAsyncHandler(async (req, res) => {
+    let { pageNumber, caticory } = req.query;
+    let limit = 3;
+    let posts;
+    if (caticory) {
+      posts = await postModel.find({ caticory }).sort({createdAt : -1});
+    }else if(pageNumber){
+      posts = await postModel.find().limit(limit).skip((pageNumber - 1 ) * limit).sort({createdAt : -1});
+    }else{
+      posts = await postModel.find().sort({createdAt : -1});
+    }
+    res.status(200).json(posts)
   })
 );
 
