@@ -48,7 +48,7 @@ router.post(
 );
 
 router.get(
-  "getAllPosts",
+  "/getAllPosts",
   expressAsyncHandler(async (req, res) => {
     let { pageNumber, caticory } = req.query;
     let limit = 3;
