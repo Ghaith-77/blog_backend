@@ -54,7 +54,7 @@ router.get(
     let limit = 3;
     let posts;
     if (caticory) {
-      posts = await postModel.find({ caticory }).sort({createdAt : -1});
+      posts = await postModel.find({ caticory }).sort({createdAt : -1}).populate("user");
     }else if(pageNumber){
       posts = await postModel.find().limit(limit).skip((pageNumber - 1 ) * limit).sort({createdAt : -1});
     }else{
