@@ -12,6 +12,8 @@ const { aploudtoCloud } = require("../medelweres/cloudenry");
 let fs = require("fs");
 const { verfiyToken } = require("../medelweres/tokenmedelweres");
 let storage = require("../medelweres/uploudImg");
+const { isValidObjectId } = require("mongoose");
+const validateObjectId = require("../medelweres/validateObjectId");
 router.post(
   "/createPost",
   verfiyToken,
@@ -48,17 +50,29 @@ router.post(
 );
 
 router.get(
+  "/getPost/:id",validateObjectId,
+  expressAsyncHandler(async (req, res) => {
+   let post = await postModel.findById(req.params.id).populate("user",["-password"]);
+   if(!post){
+    return res.status(400).json({message : "post not found "})
+   }
+    res.status(200).json(post)
+  })
+);
+
+
+router.get(
   "/getAllPosts",
   expressAsyncHandler(async (req, res) => {
     let { pageNumber, caticory } = req.query;
     let limit = 3;
     let posts;
     if (caticory) {
-      posts = await postModel.find({ caticory }).sort({createdAt : -1}).populate("user");
+      posts = await postModel.find({ caticory }).sort({createdAt : -1}).populate("user",["-password"]);
     }else if(pageNumber){
-      posts = await postModel.find().limit(limit).skip((pageNumber - 1 ) * limit).sort({createdAt : -1});
+      posts = await postModel.find().limit(limit).skip((pageNumber - 1 ) * limit).sort({createdAt : -1}).populate("user",["-password"]);
     }else{
-      posts = await postModel.find().sort({createdAt : -1});
+      posts = await postModel.find().sort({createdAt : -1}).populate("user",["-password"]);
     }
     res.status(200).json(posts)
   })
