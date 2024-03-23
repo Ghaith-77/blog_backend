@@ -62,7 +62,7 @@ router.get(
     res.status(200).json(post);
   })
 );
-router.get(
+router.delete(
   "/deletePost/:id",
   validateObjectId,
   verfiyToken,
