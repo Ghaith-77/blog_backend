@@ -75,13 +75,13 @@ router.get(
       return res.status(400).json({ message: "not authorized" });
     } else {
 
-      
+
       await postModel.findByIdAndDelete(req.params.id);
       await DeletCloud(post.image.publicId);
 
       res.status(200).json({
         message: "post deleted",
-        postId: post.id,
+        postId: post._id,
       });
     }
   })
