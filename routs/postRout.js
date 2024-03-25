@@ -71,11 +71,7 @@ router.delete(
     if (!post) {
       return res.status(400).json({ message: "post not found " });
     }
-    if (!req.user.isAdmin || req.user.id !== post.user) {
-      return res.status(400).json({ message: "not authorized" });
-    } else {
-
-
+    if (req.user.isAdmin || req.user.id == post.user.toString()) {
       await postModel.findByIdAndDelete(req.params.id);
       await DeletCloud(post.image.publicId);
 
@@ -83,6 +79,8 @@ router.delete(
         message: "post deleted",
         postId: post._id,
       });
+    } else {
+      return res.status(400).json({ message: "not authorized" });
     }
   })
 );
