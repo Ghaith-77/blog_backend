@@ -14,6 +14,7 @@ const { verfiyToken } = require("../medelweres/tokenmedelweres");
 let storage = require("../medelweres/uploudImg");
 const { isValidObjectId } = require("mongoose");
 const validateObjectId = require("../medelweres/validateObjectId");
+
 router.post(
   "/createPost",
   verfiyToken,
@@ -82,6 +83,84 @@ router.delete(
     } else {
       return res.status(400).json({ message: "not authorized" });
     }
+  })
+);
+router.put(
+  "/updatePost/:id",
+  validateObjectId,
+  verfiyToken,
+  expressAsyncHandler(async (req, res) => {
+    let { error } = validationPutpost(req.body);
+    if (error) {
+      return res.status(400).json({ message: error.details[0].message }); // استخدام return للخروج من الدالة
+    }
+
+    let post = await postModel.findById(req.params.id);
+    if (!post) {
+      return res.status(400).json({ message: "post not found " });
+    }
+
+    if (req.user.id !== post.user.toString()) {
+      return res.status(400).json({ message: "not authorized" });
+    }
+    let new_post = await postModel
+      .findByIdAndUpdate(
+        req.params.id,
+        {
+          $set: {
+            title: req.body.title,
+            description: req.body.description,
+            caticory: req.body.caticory,
+          },
+        },
+        { new: true }
+      )
+      .populate("user", ["-password"]);
+    res.status(200).json(new_post);
+  })
+);
+router.put(
+  "/updatePostImage/:id",
+  validateObjectId,
+  verfiyToken,
+  storage.single("img"),
+
+  expressAsyncHandler(async (req, res) => {
+    if (!req.file) {
+      return res.status(400).json({ message: "no file" });
+    }
+
+    let post = await postModel.findById(req.params.id);
+    if (!post) {
+      return res.status(400).json({ message: "post not found " });
+    }
+
+    if (req.user.id !== post.user.toString()) {
+      return res.status(400).json({ message: "not authorized" });
+    }
+
+    await DeletCloud(post.image.publicId);
+
+    let pathImage = path.join(__dirname, `../images/${req.file.filename}`);
+    let result = await aploudtoCloud(pathImage);
+
+    let new_post = await postModel
+      .findByIdAndUpdate(
+        req.params.id,
+        {
+          $set: {
+            image: {
+              url: result.secure_url,
+              publicId: result.public_id,
+            },
+          },
+        },
+        { new: true }
+      )
+      .populate("user", ["-password"]);
+    res.status(200).json(new_post);
+
+    fs.unlinkSync(pathImage);
   })
 );
 
