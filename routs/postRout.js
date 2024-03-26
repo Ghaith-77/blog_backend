@@ -125,7 +125,6 @@ router.put(
   verfiyToken,
   storage.single("img"),
   expressAsyncHandler(async (req, res) => {
-
     if (!req.file) {
       return res.status(400).json({ message: "no file" });
     }
@@ -140,7 +139,6 @@ router.put(
     }
     await DeletCloud(post.image.publicId);
 
-  
     let pathImage = path.join(__dirname, `../images/${req.file.filename}`);
     let result = await aploudtoCloud(pathImage);
     let new_post = await postModel
@@ -191,40 +189,43 @@ router.get(
   })
 );
 
-
 router.put(
   "/likes/:id",
   validateObjectId,
   verfiyToken,
   expressAsyncHandler(async (req, res) => {
-
-    let  = await postModel.findById(req.params.id);
+    let post = await postModel.findById(req.params.id);
     if (!post) {
       return res.status(400).json({ message: "post not found " });
     }
 
-    let postfind = postModel.likes.find((user)=> user.toString() === req.user.id)
+    let postfind = post.likes.some((user) => user.toString() === req.user.id);
 
-    if(postfind){
-       post = await postModel
-      .findByIdAndUpdate(
+    console.log(postfind);
+     
+   
+
+    if (postfind) {
+      console.log("pull");
+      post = await postModel.findByIdAndUpdate(
         req.params.id,
         {
-          $pull: {likes : req.user.id},
+          $pull: { likes: req.user.id },
         },
         { new: true }
-      )
-    }
-    else{
-      post = await postModel
-      .findByIdAndUpdate(
+      );
+    } else {
+      console.log("push");
+
+      post = await postModel.findByIdAndUpdate(
         req.params.id,
         {
-          $pull: {likes : req.user.id},
+          $push: { likes: req.user.id },
         },
-        { new: true })
+        { new: true }
+      );
     }
-    res.status(200).json(post)
+    res.status(200).json(post);
   })
 );
 
