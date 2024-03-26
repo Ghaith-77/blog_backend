@@ -124,7 +124,6 @@ router.put(
   validateObjectId,
   verfiyToken,
   storage.single("img"),
-
   expressAsyncHandler(async (req, res) => {
     if (!req.file) {
       return res.status(400).json({ message: "no file" });
