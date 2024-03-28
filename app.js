@@ -13,6 +13,7 @@ app.use(express.json())
 app.use("/userAuth", require("./routs/userRout/userAuth"))
 app.use("/usermethod", require("./routs/userRout/usermethod"))
 app.use("/postRouts", require("./routs/postRout"))
+app.use("/CommentRouts", require("./routs/commentRout"))
 
 
 

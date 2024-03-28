@@ -27,24 +27,24 @@ const commentSchema = mongoose.Schema(
   { timestamps: true }
 );
 
-const commentModel = mongoose.model("Comment", PostSchema);
+const commentModel = mongoose.model("Comment", commentSchema);
 
-function validationcreatepostComment(obj) {
+function validationcreateComment(obj) {
   const schema = joi.object({
-    title: joi.string().trim().required(),
+    text: joi.string().trim().required(),
     postId: joi.string().required(),
   });
   return schema.validate(obj);
 }
 function validationPutComment(obj) {
   const schema = joi.object({
-    title: joi.string().trim().required(),
+    text: joi.string().trim().required(),
   });
   return schema.validate(obj);
 }
 
 module.exports = {
     commentModel,
-  validationcreatepostComment,
+  validationcreateComment,
   validationPutComment,
 };
