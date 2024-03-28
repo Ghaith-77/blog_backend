@@ -18,7 +18,7 @@ router.get(
   "/getAllUsers",
   verfiyTokenandAdmin,
   expressAsyncHandler(async (req, res) => {
-    let users = await userModel.find().select("-password");
+    let users = await userModel.find().select("-password").populate("posts");
     res.status(200).json(users);
   })
 );
@@ -26,7 +26,7 @@ router.get(
   "/getUser/:id",
   validateObjectId,
   expressAsyncHandler(async (req, res) => {
-    let user = await userModel.findById(req.params.id).select("-password");
+    let user = await userModel.findById(req.params.id).select("-password").populate("posts");
     if (!user) {
       return res.status(400).json({ message: "User not found" });
     }

@@ -41,7 +41,7 @@ const userSchema = mongoose.Schema(
       type: String,
     },
   },
-  { timestamps: true, toJson: { virtual: true }, toObject: { virtual: true } }
+  { timestamps: true,  toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
 userSchema.virtual("posts", {
