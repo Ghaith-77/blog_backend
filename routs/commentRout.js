@@ -86,7 +86,7 @@ router.put(
       { new: true }
     );
 
-    res.status(200).json(newComment);
+    res.status(200).json(newComment) 
   })
 );
 module.exports = router; // تصحيح في تصدير الراوتر
