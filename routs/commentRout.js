@@ -65,28 +65,33 @@ router.put(
   verfiyToken,
   validateObjectId,
   expressAsyncHandler(async (req, res) => {
-    let { error } = validationcreateComment(req.body);
+    let { error } = validationPutComment(req.body);
     if (error) {
       return res.status(400).json({ message: error.details[0].message });
     }
 
     let comment = await commentModel.findById(req.params.id);
 
-    if (req.user.id !== comment.uesr.toString()) {
+    if (req.user.id !== comment.user.toString()) {
+      console.log("1");
       return res.status(400).json({ message: "not authorized" });
+    }else{
+    console.log("2");
+
+      let newComment = await commentModel.findByIdAndUpdate(
+        req.params.id,
+        {
+          $set: {
+            text: req.body.text,
+          },
+        },
+        { new: true }
+      );
+  
+      res.status(200).json(newComment);
     }
 
-    let newComment = await commentModel.findByIdAndUpdate(
-      req.params.id,
-      {
-        $set: {
-          text: req.body.text,
-        },
-      },
-      { new: true }
-    );
-
-    res.status(200).json(newComment);
+  
   })
 );
 module.exports = router; // تصحيح في تصدير الراوتر

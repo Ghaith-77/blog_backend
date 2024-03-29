@@ -14,6 +14,7 @@ const { verfiyToken } = require("../medelweres/tokenmedelweres");
 let storage = require("../medelweres/uploudImg");
 const { isValidObjectId } = require("mongoose");
 const validateObjectId = require("../medelweres/validateObjectId");
+const { commentModel } = require("../mudels/commentModel");
 
 router.post(
   "/createPost",
@@ -56,7 +57,8 @@ router.get(
   expressAsyncHandler(async (req, res) => {
     let post = await postModel
       .findById(req.params.id)
-      .populate("user", ["-password"]);
+      .populate("user", ["-password"])
+      .populate("Comments");
     if (!post) {
       return res.status(400).json({ message: "post not found " });
     }
@@ -75,7 +77,7 @@ router.delete(
     if (req.user.isAdmin || req.user.id == post.user.toString()) {
       await postModel.findByIdAndDelete(req.params.id);
       await DeletCloud(post.image.publicId);
-
+      await commentModel.deleteMany({postId : post._id});
       res.status(200).json({
         message: "post deleted",
         postId: post._id,
@@ -171,19 +173,23 @@ router.get(
       posts = await postModel
         .find({ caticory })
         .sort({ createdAt: -1 })
-        .populate("user", ["-password"]);
+        .populate("user", ["-password"])
+        .populate("Comments");
     } else if (pageNumber) {
       posts = await postModel
         .find()
         .limit(limit)
         .skip((pageNumber - 1) * limit)
         .sort({ createdAt: -1 })
-        .populate("user", ["-password"]);
+        .populate("user", ["-password"])
+        .populate("Comments");
+
     } else {
       posts = await postModel
         .find()
         .sort({ createdAt: -1 })
-        .populate("user", ["-password"]);
+        .populate("user", ["-password"])
+        .populate("Comments");
     }
     res.status(200).json(posts);
   })

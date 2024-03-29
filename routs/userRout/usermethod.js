@@ -11,9 +11,11 @@ const router = require("express").Router(); // تصحيح في استدعاء ا
 const bcrypt = require("bcryptjs"); // تصحيح في استدعاء مكتبة bcrypt
 const storge = require("../../medelweres/uploudImg");
 let path = require("path");
-const { aploudtoCloud, DeletCloud } = require("../../medelweres/cloudenry");
+const { aploudtoCloud, DeletCloud, DeletCloudMany } = require("../../medelweres/cloudenry");
 let fs = require("fs");
 const { log } = require("console");
+const { postModel } = require("../../mudels/postModel");
+const { commentModel } = require("../../mudels/commentModel");
 router.get(
   "/getAllUsers",
   verfiyTokenandAdmin,
@@ -117,7 +119,18 @@ router.delete(
     if (!user) {
       return res.status(400).json({ message: "user not found" });
     }
+
+    let posts = await postModel.find({user : user._id})
+
+
+    let postsid = posts.map(post =>{user.profilePhoto.publicId})
+    if(postsid?.lenght > 0){
+        await DeletCloudMany(postsid)
+    }
     await DeletCloud(user.profilePhoto.publicId);
+
+    await postModel.deleteMany({user : user._id})
+    await commentModel.deleteMany({user : user._id})
     await userModel.findByIdAndDelete(user.id)
     res.status(200).json({message: "user deleted "});
   }

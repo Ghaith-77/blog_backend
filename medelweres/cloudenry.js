@@ -29,6 +29,14 @@ async function DeletCloud(imgId) {
         return error
     }
 }
+async function DeletCloudMany(imgIds) {
+    try {
+        let data = await cloudinary.v2.api.delete_resources(imgIds)
+        return data
+    } catch (error) {
+        return error
+    }
+}
 module.exports = {
-    DeletCloud,aploudtoCloud
+    DeletCloud,aploudtoCloud,DeletCloudMany
 }
