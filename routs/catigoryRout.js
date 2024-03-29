@@ -1,7 +1,7 @@
 const expressAsyncHandler = require("express-async-handler");
 const {
   postModel,
-  validationcreatepost,
+  validationcreateCatigory,
 } = require("../mudels/postModel"); // تصحيح في اسم المجلد models
 const bcrypt = require("bcryptjs"); // تصحيح في استدعاء مكتبة bcrypt
 const router = require("express").Router(); // تصحيح في استدعاء الدالة Router()
@@ -23,7 +23,7 @@ router.post(
   "/CreateCatigory",
   verfiyTokenandAdmin,
   expressAsyncHandler(async (req, res) => {
-    let { error } = validationcreatepost(req.body);
+    let { error } = validationcreateCatigory(req.body);
     if (error) {
       return res.status(400).json({ message: error.details[0].message }); // استخدام return للخروج من الدالة
     }
