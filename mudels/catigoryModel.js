@@ -19,7 +19,7 @@ const catigorySchema = mongoose.Schema(
   { timestamps: true }
 );
 
-const CatigoryModel = mongoose.model("Catigory", catigorySchema);
+const CatigoryModell = mongoose.model("Catigory", catigorySchema);
 
 function validationcreateCatigory(obj) {
   const schema = joi.object({
@@ -30,6 +30,6 @@ function validationcreateCatigory(obj) {
 
 
 module.exports = {
-    CatigoryModel,
+  CatigoryModell,
     validationcreateCatigory,
 };

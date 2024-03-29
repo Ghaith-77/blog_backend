@@ -1,6 +1,7 @@
 let express = require("express")
 let app = express()
 let connectToDB = require("./config/connectToDB")
+const { notFound, errorHandling } = require("./medelweres/error")
 connectToDB()
 
 require("dotenv").config()
@@ -16,7 +17,8 @@ app.use("/postRouts", require("./routs/postRout"))
 app.use("/CommentRouts", require("./routs/commentRout"))
 app.use("/CatigoryRouts", require("./routs/catigoryRout"))
 
-
+app.use(notFound)
+app.use(errorHandling)
 
 let port = process.env.port || 3000
 app.listen(port, () => {
