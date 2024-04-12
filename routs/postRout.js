@@ -187,6 +187,7 @@ router.get(
     } else {
       posts = await postModel
         .find()
+        
         .sort({ createdAt: -1 })
         .populate("user", ["-password"])
         .populate("Comments");

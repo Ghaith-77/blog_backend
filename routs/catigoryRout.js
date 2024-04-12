@@ -33,7 +33,7 @@ router.post(
 router.get(
   "/getAllCatigory",
   expressAsyncHandler(async (req, res) => {
-    ddd
+    
     let Catigorys = await CatigoryModell.find();
     res.status(200).json(Catigorys);
   })

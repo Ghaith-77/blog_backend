@@ -1,5 +1,6 @@
 let express = require("express")
 let app = express()
+let cors = require("cors")
 let connectToDB = require("./config/connectToDB")
 const { notFound, errorHandling } = require("./medelweres/error")
 connectToDB()
@@ -7,6 +8,7 @@ connectToDB()
 require("dotenv").config()
 
 app.use(express.json())
+app.use(cors())
 
 
 // routs__________
